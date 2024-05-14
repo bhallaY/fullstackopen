@@ -4,7 +4,7 @@ sequenceDiagram
     participant browser
     participant server
     loop BrowserJSCode
-        browser->>browser: create note, save in
+        browser->>browser: create note
         browser->>browser: save note in memory
         browser->>browser: clear form field
         browser->>browser: redraw screen by recreating list items
