@@ -1,15 +1,15 @@
 ```mermaid
 sequenceDiagram
+
     participant browser
     participant server
-
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     server->>browser: redirect to /exampleapp/notes
     Note right of browser: new note data in body of POST
     Note right of browser: server saves the new note in server memory
+    Note right of browser: redirect triggers same sequcen of requests as visiting /exampleapp/notes
     deactivate server
 
-    Note right of browser: redirect triggers same sequcen of requests as visiting /exampleapp/notes
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     server->>browser: HTML document
     deactivate server

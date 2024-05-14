@@ -3,7 +3,6 @@ sequenceDiagram
 
     participant browser
     participant server
-
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
     server->>browser: HTML document
     Note right of browser: contents of HTML document are different than before. Different JS file and form setup
