@@ -18,11 +18,19 @@ const Total = ({ exercises }) => {
 
 const App = () => {
   const course = 'Half Stack application development'
-  const partWithExercise = [
-    { part: 'Fundamentals of React', exercise: 10 },
-    { part: 'Using props to pass data', exercise: 7 },
-    { part: 'State of a component', exercise: 14 },
-  ]
+  const part1 = {
+    part: 'Fundamentals of React',
+    exercise: 10
+  }
+  const part2 = {
+    part: 'Using props to pass data',
+    exercise: 7
+  }
+  const part3 = {
+    part: 'State of a component',
+    exercise: 14
+  }
+  const partWithExercise = [part1, part2, part3]
 
   return (
     <div>
