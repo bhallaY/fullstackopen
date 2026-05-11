@@ -1,3 +1,5 @@
+# Shared ignore rules for all standalone exercise apps in this repo
+
 # Logs
 logs
 *.log
@@ -7,6 +9,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies and build output for every exercise app
 node_modules
 dist
 dist-ssr
@@ -22,3 +25,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local browser automation artifacts
+.playwright-mcp*
