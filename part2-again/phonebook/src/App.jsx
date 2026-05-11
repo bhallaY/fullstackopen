@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -11,13 +14,10 @@ const App = () => {
   const [newSearchTerm, setSearchTerm] = useState('')
   const [newNumber, setNewNumber] = useState('')
 
-
-  const isDuplicateName = (p) => p.name === newName
-
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (persons.some(isDuplicateName)) {
+    if (persons.some((p) => p.name === newName)) {
       alert(`${newName} is already added to phonebook`)
 
       return
@@ -43,27 +43,13 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <label> filter shown with <input type="search" value={newSearchTerm} onChange={handleSearchTermChange} /></label>
+      <Filter newSearchTerm={newSearchTerm} handleSearchTermChange={handleSearchTermChange} />
       <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      {
-        persons.filter((p) => p.name.toLowerCase().includes(newSearchTerm.toLowerCase())).map((p) => <Person person={p} key={p.id} />)
-      }
+      <Persons persons={persons} searchTerm={newSearchTerm} />
     </div>
   )
 }
-
-const Person = ({ person }) => <p>{person.name} {person.number}</p>
 
 export default App
