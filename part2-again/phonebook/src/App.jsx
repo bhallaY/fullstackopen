@@ -98,7 +98,7 @@ const App = () => {
       <Persons
         persons={persons}
         searchTerm={newSearchTerm}
-        onClick={handleDelete}
+        handleDeletePerson={handleDelete}
       />
     </div>
   );
