@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
+import { Notification } from "./components/Notifications";
 import { createPersonEntry, deletePersonEntry, updatePersonEntry, getAllPersons } from "./services/persons";
 
 const App = () => {
@@ -9,6 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [filterTerm, setFilterTerm] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [notificationObj, setNotificationObj] = useState(null);
+  const prevTimer = useRef(null)
 
   useEffect(() => {
     getAllPersons()
@@ -20,6 +23,15 @@ const App = () => {
     setNewNumber("")
   }
 
+  const showNotification = ({ msg, type }) => {
+    setNotificationObj({ msg, type })
+    clearTimeout(prevTimer.current)
+    prevTimer.current = setTimeout(() => {
+      setNotificationObj(null)
+      prevTimer.current = null
+    }, 5000)
+  }
+
   const addPerson = () => {
     const newPerson = {
       name: newName,
@@ -29,6 +41,7 @@ const App = () => {
     createPersonEntry(newPerson).then((person) => {
       setPersons((prevPersons) => prevPersons.concat(person));
       resetNewPerson()
+      showNotification({ msg: `Added ${person.name}`, type: 'success' });
     });
   }
 
@@ -39,9 +52,14 @@ const App = () => {
     };
 
     updatePersonEntry(updatedPerson).then((data) => {
-      setPersons((prevPersons) => prevPersons.map((p) => p.id === prevEntry.id ? data : p));
+      setPersons((prevPersons) => prevPersons.map((p) => p.id === data.id ? data : p));
       resetNewPerson()
-    });
+      showNotification({ msg: `Updated ${data.name}'s phone number`, type: 'success' })
+    }).catch(error => {
+      showNotification({ msg: `Information of ${prevEntry.name} has already been removed from server`, type: 'error' })
+      setPersons((prevPersons) => prevPersons.filter(p => p.id !== prevEntry.id))
+    })
+
   }
 
 
@@ -80,6 +98,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationObj} />
       <Filter
         newSearchTerm={filterTerm}
         handleSearchTermChange={handleSearchTermChange}
