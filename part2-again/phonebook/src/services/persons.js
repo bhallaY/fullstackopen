@@ -13,9 +13,11 @@ export function deletePersonEntry(id) {
 }
 
 export function updatePersonEntry(updatePerson) {
-  console.log("updatePerson", updatePerson);
-  console.log("path", `${baseUrl}/${updatePerson.id}`);
   const req = axios.put(`${baseUrl}/${updatePerson.id}`, updatePerson);
-  console.log(req.then((res) => console.log(res.data)));
+  return req.then((res) => res.data);
+}
+
+export function getAllPersons() {
+  const req = axios.get("http://localhost:3001/persons");
   return req.then((res) => res.data);
 }

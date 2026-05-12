@@ -3,8 +3,7 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import { useEffect } from "react";
-import axios from "axios";
-import { createPersonEntry, deletePersonEntry, updatePersonEntry } from "./services/persons";
+import { createPersonEntry, deletePersonEntry, updatePersonEntry, getAllPersons } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,9 +12,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((resp) => setPersons(resp.data));
+    getAllPersons()
+      .then(initPersons => setPersons(initPersons));
   }, []);
 
   const resetNewPerson = () => {
@@ -43,8 +41,7 @@ const App = () => {
     };
 
     updatePersonEntry(updatedPerson).then((data) => {
-      console.log("res data", data)
-      setPersons((prevPersons) => prevPersons.map((p) => p.id === prevEntry.id ? updatedPerson : p));
+      setPersons((prevPersons) => prevPersons.map((p) => p.id === prevEntry.id ? data : p));
       resetNewPerson()
     });
   }
@@ -64,8 +61,8 @@ const App = () => {
 
   const handleDelete = (id) => {
     if (window.confirm(`Delete ${persons.find((p) => p.id === id).name}?`)) {
-      deletePersonEntry(id).then((delP) => {
-        setPersons(persons.filter((p) => p.id !== delP.id))
+      deletePersonEntry(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id))
       })
     }
   };
