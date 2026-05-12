@@ -1,61 +1,110 @@
-import { useState } from 'react'
-import Persons from './components/Persons'
-import PersonForm from './components/PersonForm'
-import Filter from './components/Filter'
+import { useState } from "react";
+import Persons from "./components/Persons";
+import PersonForm from "./components/PersonForm";
+import Filter from "./components/Filter";
+import { useEffect } from "react";
+import axios from "axios";
+import { createPersonEntry, deletePersonEntry, updatePersonEntry } from "./services/persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
-  const [newName, setNewName] = useState('')
-  const [newSearchTerm, setSearchTerm] = useState('')
-  const [newNumber, setNewNumber] = useState('')
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState("");
+  const [newSearchTerm, setSearchTerm] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
-  const addPerson = (event) => {
-    event.preventDefault()
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then((resp) => setPersons(resp.data));
+  }, []);
 
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
+  const resetNewPerson = () => {
+    setNewName("")
+    setNewNumber("")
+  }
 
+  const addPerson = () => {
     const newPerson = {
       name: newName,
       number: newNumber,
       id: persons.length + 1,
-    }
+    };
 
-    setPersons(prevPersons => prevPersons.concat(newPerson))
-    setNewName('')
-    setNewNumber('')
+    createPersonEntry(newPerson).then((person) => {
+      setPersons((prevPersons) => prevPersons.concat(person));
+      resetNewPerson()
+    });
   }
 
+  const updatePerson = () => {
+    const prevEntry = persons.find((person) => person.name === newName)
+    const updatedPerson = {
+      ...prevEntry, number: newNumber
+    };
+
+    updatePersonEntry(updatedPerson).then((data) => {
+      console.log("res data", data)
+      setPersons((prevPersons) => prevPersons.map((p) => p.id === prevEntry.id ? updatedPerson : p));
+      resetNewPerson()
+    });
+  }
+
+
+  const addOrUpdatePerson = (event) => {
+    event.preventDefault();
+
+    if (persons.some((person) => person.name === newName)) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        updatePerson()
+      }
+    } else {
+      addPerson()
+    }
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm(`Delete ${persons.find((p) => p.id === id).name}?`)) {
+      deletePersonEntry(id).then((delP) => {
+        setPersons(persons.filter((p) => p.id !== delP.id))
+      })
+    }
+  };
 
   const handleNumberChange = (event) => {
-    setNewNumber(event.target.value)
-  }
+    setNewNumber(event.target.value);
+  };
 
   const handleSearchTermChange = (event) => {
-    setSearchTerm(event.target.value)
-  }
+    setSearchTerm(event.target.value);
+  };
 
   const handleNameChange = (event) => {
-    setNewName(event.target.value)
-  }
+    setNewName(event.target.value);
+  };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter newSearchTerm={newSearchTerm} handleSearchTermChange={handleSearchTermChange} />
+      <Filter
+        newSearchTerm={newSearchTerm}
+        handleSearchTermChange={handleSearchTermChange}
+      />
       <h2>add a new</h2>
-      <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+      <PersonForm
+        addOrUpdatePerson={addOrUpdatePerson}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
       <h2>Numbers</h2>
-      <Persons persons={persons} searchTerm={newSearchTerm} />
+      <Persons
+        persons={persons}
+        searchTerm={newSearchTerm}
+        onClick={handleDelete}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
