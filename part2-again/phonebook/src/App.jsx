@@ -1,14 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
-import { useEffect } from "react";
 import { createPersonEntry, deletePersonEntry, updatePersonEntry, getAllPersons } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
-  const [newSearchTerm, setSearchTerm] = useState("");
+  const [filterTerm, setFilterTerm] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
   useEffect(() => {
@@ -61,7 +60,7 @@ const App = () => {
   const handleDelete = (id) => {
     if (window.confirm(`Delete ${persons.find((p) => p.id === id).name}?`)) {
       deletePersonEntry(id).then(() => {
-        setPersons(persons.filter((p) => p.id !== id))
+        setPersons(prevPersons => prevPersons.filter((p) => p.id !== id))
       })
     }
   };
@@ -71,7 +70,7 @@ const App = () => {
   };
 
   const handleSearchTermChange = (event) => {
-    setSearchTerm(event.target.value);
+    setFilterTerm(event.target.value);
   };
 
   const handleNameChange = (event) => {
@@ -82,7 +81,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter
-        newSearchTerm={newSearchTerm}
+        newSearchTerm={filterTerm}
         handleSearchTermChange={handleSearchTermChange}
       />
       <h2>add a new</h2>
@@ -96,7 +95,7 @@ const App = () => {
       <h2>Numbers</h2>
       <Persons
         persons={persons}
-        searchTerm={newSearchTerm}
+        searchTerm={filterTerm}
         handleDeletePerson={handleDelete}
       />
     </div>

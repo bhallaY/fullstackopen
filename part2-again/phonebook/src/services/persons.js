@@ -18,6 +18,6 @@ export function updatePersonEntry(updatePerson) {
 }
 
 export function getAllPersons() {
-  const req = axios.get("http://localhost:3001/persons");
+  const req = axios.get(baseUrl);
   return req.then((res) => res.data);
 }
