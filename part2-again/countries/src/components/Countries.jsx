@@ -1,4 +1,4 @@
-export function Countries({ searchTerm, countries }) {
+export function Countries({ searchTerm, countries, handleShowCountry }) {
     if (!searchTerm) {
         return null
     }
@@ -6,7 +6,7 @@ export function Countries({ searchTerm, countries }) {
     if (filteredCountries.length > 10) {
         return <p>Too many matches, specify another filter</p>
     } else if (filteredCountries.length > 1 && filteredCountries.length < 10) {
-        return filteredCountries.map(c => { return <li key={c.name.common}>{c.name.common}</li> })
+        return filteredCountries.map(c => <li key={c.name.common}>{c.name.common} <button onClick={() => handleShowCountry(c.name.common)}>Show</button></li>)
     } else if (filteredCountries.length === 1) {
         const c = filteredCountries[0]
         return <Country country={c} />

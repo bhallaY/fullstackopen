@@ -16,6 +16,10 @@ function App() {
     setSearchTerm(event.target.value);
   };
 
+  const handleShowCountry = (country) => {
+    setSearchTerm(country)
+  }
+
   return (
     <>
       <p>
@@ -26,7 +30,7 @@ function App() {
           onChange={handleSearchTermChange}
         ></input>
       </p>
-      <Countries searchTerm={searchTerm} countries={countries} />
+      <Countries searchTerm={searchTerm} countries={countries} handleShowCountry={handleShowCountry} />
     </>
   );
 }
