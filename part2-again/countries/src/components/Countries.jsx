@@ -22,9 +22,17 @@ function Country({ country }) {
     const [weatherInformation, setWeatherInformation] = useState(null)
 
     useEffect(() => {
+        let ignore = false
+
         getWeatherInfo(country.capital[0], country.cca2).then(resp => {
-            setWeatherInformation(resp)
+            if (!ignore) {
+                setWeatherInformation(resp)
+            }
         })
+
+        return () => {
+            ignore = true
+        }
     }, [country.capital, country.cca2]);
 
 

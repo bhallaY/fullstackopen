@@ -12,6 +12,7 @@ export function getWeatherInfo(capital, countryCode) {
     .then((res) => res.data)
     .catch((err) => {
       console.error(err);
+      return null;
     });
 }
 
