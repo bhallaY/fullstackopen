@@ -55,7 +55,7 @@ const App = () => {
       setPersons((prevPersons) => prevPersons.map((p) => p.id === data.id ? data : p));
       resetNewPerson()
       showNotification({ msg: `Updated ${data.name}'s phone number`, type: 'success' })
-    }).catch(error => {
+    }).catch(() => {
       showNotification({ msg: `Information of ${prevEntry.name} has already been removed from server`, type: 'error' })
       setPersons((prevPersons) => prevPersons.filter(p => p.id !== prevEntry.id))
     })

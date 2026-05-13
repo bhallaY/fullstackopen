@@ -28,3 +28,4 @@ dist-ssr
 
 # Local browser automation artifacts
 .playwright-mcp*
+part2-again/countries/.env

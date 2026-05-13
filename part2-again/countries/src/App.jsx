@@ -12,6 +12,8 @@ function App() {
     })
   }, []);
 
+
+
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
   };
