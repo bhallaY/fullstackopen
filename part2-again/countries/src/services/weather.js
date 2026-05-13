@@ -8,7 +8,11 @@ export function getWeatherInfo(capital, countryCode) {
     `${BASE_URL}/weather?q=${capital},${countryCode}&appid=${API_KEY}`,
   );
 
-  return req.then((res) => res.data);
+  return req
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
 export function getWeatherIconUrl(icon) {
