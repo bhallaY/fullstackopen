@@ -1,13 +1,11 @@
 import express from "express";
 import morgan from "morgan";
-import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const MAX_ENTRIES = 1000000;
 app.use(express.static("frontend-build"));
 app.use(express.json());
-app.use(cors());
 
 morgan.token("body", function (req, res) {
   if (req.method === "POST") {
